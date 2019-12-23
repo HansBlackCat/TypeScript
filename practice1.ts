@@ -105,5 +105,112 @@ const developerType: DeveloperType = {
     skills: ['C', 'C++', 'Assembly']
 };
 
+type PersonList = PersonType[];
+const peopleList: PersonList = [personType, developerType];
+
+type Color = 'Red' | 'Blue' | 'Yellow';
+const color: Color = 'Red';
+const colors: Color[] = ['Red', 'Blue'];
+
+// <<Generic>>
+function merge(a:any, b:any): any {
+    return {
+        ...a,
+        ...b
+    };
+}
+const merged = merge({foo:1}, {bar:1});
+console.log(merged);
+
+function merge2<A,B>(a:A, b:B): A&B {
+    return {
+        ...a,
+        ...b
+    };
+}
+const merged2 = merge2({foo:1}, {bar:1});
+console.log(merged2);
+
+function wrap<T>(param: T) {
+    return {
+        param
+    };
+}
+const wrapped = wrap(true);
+
+interface Items<T> {
+    list: T[]
+}
+const items: Items<string> = {
+    list: ['potion', 'sword', 'shield']
+}
+
+class Queue<T> {
+    private list: T[] = [];
+    
+    /*
+    get sort() {
+        return this.list.sort();
+    }*/
+    
+    iawayslike3 = () => 3
 
 
+    enqueue(item: T) {
+        this.list.push(item);
+    }
+    dequeue() {
+        return this.list.shift();
+    }
+}
+
+const queue = new Queue<number>();
+queue.enqueue(0);
+queue.enqueue(3);
+queue.enqueue(8);
+queue.enqueue(3);
+queue.enqueue(6);
+console.log(queue);
+console.log(queue.dequeue());
+//console.log(queue.sort);
+
+let funcTest = () =>1
+
+let a: Array<number> = [3,2,7,5]
+console.log('<<SandBox>>');
+console.log(a);
+console.log(
+    a.reduce((a,b)=>
+    {if (b<5)
+        return a-1
+    else return a+b}
+    ,0), 
+)
+
+type vector = [number, number];
+function moveKnight(currentPosition: vector) {
+    let [tempa,tempb] = currentPosition
+    let tempArr: vector[] = [];
+    ((tempa, tempb) => {tempArr.push(
+        [tempa+1, tempb+2],
+        [tempa+1, tempb-2],
+        [tempa-1, tempb+2],
+        [tempa-1, tempb-2],
+        [tempa+2, tempb+1],
+        [tempa+2, tempb-1],
+        [tempa-2, tempb+2],
+        [tempa-2, tempb-1]
+    )})(tempa, tempb)
+    let arr = tempArr.filter(([a,b]) => 0<a&&a<9&&0<b&&b<9)
+    return arr
+}
+function recurKnight(piled:vector[], recurN:number) {
+    if (recurN==0) {return piled}
+    let recurArr:vector[] = []
+    let avalanche:vector[][] = piled.map(x=>moveKnight(x))
+    let newPiled:vector[] = avalanche.reduce((acc, curr)=>acc.concat(curr),[]);
+    return recurKnight(newPiled, recurN-1);
+}
+console.log(
+    recurKnight([[1,2]], 5)
+)
